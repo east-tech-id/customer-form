@@ -86,7 +86,7 @@ function cf_post_customer() {
         );
 
         if (isset($_POST['from']) && $_POST['from'] == 'admin_page')
-            wp_redirect(admin_url('admin.php?page=customer-data'));
+            wp_redirect(admin_url('admin.php?page=customer-form'));
         else
             wp_redirect(home_url());
         exit;
@@ -97,13 +97,13 @@ add_action('admin_post_cf_post_customer', 'cf_post_customer');
 
 function cf_register_menu_page() {
     add_menu_page(
-        'Customer Data',
-        'Customer Data',
+        'Customer Form',
+        'Customer Form',
         'manage_options',
-        'customer-data',
+        'customer-form',
         'cf_display_customers',
-        'dashicons-admin-users',
-        6
+        'dashicons-universal-access',
+        70
     );
 }
 add_action('admin_menu', 'cf_register_menu_page');
@@ -114,8 +114,8 @@ function cf_display_customers() {
     // Edit data customer
     if (isset($_GET['section']) && $_GET['section'] == 'create') {
         ?>
-        <div class="wrap">
-            <h4 class="my-4">Create Customer</h4>
+        <div class="wrap mt-5">
+            <h4 class="my-3">Create Customer</h4>
             <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
                 <input type="hidden" name="action" value="cf_post_customer">
                 <input type="hidden" name="from" value="admin_page">
@@ -148,7 +148,7 @@ function cf_display_customers() {
         $customer_id = intval($_GET['edit']);
         $customer = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $customer_id");
         ?>
-        <div class="wrap">
+        <div class="wrap mt-5">
             <h4>Edit data <?php echo esc_attr($customer->name); ?></h4>
             <form method="POST">
                 <div class="mb-3">
@@ -181,9 +181,9 @@ function cf_display_customers() {
         $customers = $wpdb->get_results("SELECT * FROM $table_name ORDER BY id DESC");
 
         echo '<div class="wrap">';
-        echo '<div class="d-flex justify-content-between align-items-center mb-3">';
-        echo '<h4 class="mb-0">Customer Data</h4>
-            <a href="?page=customer-data&section=create" class="btn btn-primary btn-sm">Add Customer</a>';
+        echo '<div class="d-flex justify-content-between align-items-center mt-5 mb-3">';
+        echo '<h4 class="mb-0">Customer Form</h4>
+            <a href="?page=customer-form&section=create" class="btn btn-primary btn-sm">Add Customer</a>';
         echo '</div>';
         echo '<table class="wp-list-table widefat fixed striped">';
         echo '<thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Birthdate</th><th>Address</th>
@@ -196,7 +196,7 @@ function cf_display_customers() {
             <td>{$customer->phone}</td>
             <td>{$customer->birthdate}</td>
             <td>{$customer->address}</td>
-            <td><a href='?page=customer-data&edit={$customer->id}'>Edit</a> | <a href='?page=customer-data&delete={$customer->id}'>Delete</a></td>
+            <td><a href='?page=customer-form&edit={$customer->id}'>Edit</a> | <a href='?page=customer-form&delete={$customer->id}'>Delete</a></td>
         </tr>";
         }
         echo '</tbody></table></div>';
@@ -209,7 +209,7 @@ function cf_handle_admin_actions() {
     // Hapus data customer
     if (isset($_GET['delete'])) {
         $wpdb->delete($table_name, ['id' => intval($_GET['delete'])]);
-        wp_redirect(admin_url('admin.php?page=customer-data'));
+        wp_redirect(admin_url('admin.php?page=customer-form'));
         exit;
     }
 
@@ -228,7 +228,7 @@ function cf_handle_admin_actions() {
             ['id' => $customer_id]
         );
 
-        wp_redirect(admin_url('admin.php?page=customer-data'));
+        wp_redirect(admin_url('admin.php?page=customer-form'));
         exit;
     }
 }
